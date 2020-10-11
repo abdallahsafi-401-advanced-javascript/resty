@@ -1,0 +1,17 @@
+$headerColor: #F5E6E8;
+$headerBackColor: #141115;
+$headerFont: Arial, Helvetica, sans-serif;
+$headerFontSize: 20pt;
+
+header {
+    h1 {
+        color: $headerColor;
+        background-color: $headerBackColor;
+        text-align: center;
+        padding: 20px;
+        font-family: $headerFont;
+        font-size: $headerFontSize;
+        font-weight: bold;
+        
+      }
+}
