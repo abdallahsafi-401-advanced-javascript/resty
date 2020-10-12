@@ -4,6 +4,8 @@ import './app.scss';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import Form from './components/form/Form';
+import Results from './components/results/Results';
+
 
 
 
@@ -12,13 +14,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: '',
-      method: ''
+      header:{},
+      count: 0,
+      results: []
     };
   }
 
-  handleChange = childData => {
-    this.setState({url: childData.url, method: childData.method})
+  handleChange = (count, results, header) => {
+    this.setState({count: count, results: results, header: header});
+    console.log('state', this.state);
+   
   };
 
 
@@ -26,13 +31,8 @@ class App extends React.Component {
     return (
       <>
         <Header />
-        <Form parentCallback = {this.handleChange}/>
-        {this.state.url.length >  0 &&  <div id="user-choices">
-          <h3>User Choices</h3>
-          <p>URL: <span>{this.state.url}</span></p>
-          <p>METHOD: <span>{this.state.method}</span></p>
-        </div>}
-    
+        <Form  parentCallback = {this.handleChange}/>
+        <Results apiData = {this.state}/>
         <Footer />
       </>
     );
