@@ -22,7 +22,7 @@ class App extends React.Component {
 
   handleChange = (count, results, header) => {
     this.setState({count: count, results: results, header: header});
-    console.log('state', this.state);
+    // console.log('state', this.state);
    
   };
 
