@@ -20,7 +20,7 @@ export default class Form extends React.Component {
     this.setState({ isSubmitted: true });
     let raw = await fetch(this.state.url);
     let jsonData = await raw.json();
-    // console.log('raw.headers ----->', jsonData);
+   
     
     // let data = {
     //   count: jsonData.count,
