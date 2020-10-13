@@ -2,37 +2,27 @@ import React from "react";
 import "./form.scss";
 
 export default class Form extends React.Component {
-  constructor() {
-    super();
-    this.state = { url: "", method: "Get", isSubmitted: false };
+  constructor(props) {
+    super(props);
+    this.state = { url: this.props.url, method: this.props.method };
     this.handleChangeURL = this.handleChangeURL.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeMethod = this.handleChangeMethod.bind(this);
   }
+  static getDerivedStateFromProps(props) {
+    return { url: props.url, method: props.method };
+  }
 
   handleChangeURL(event) {
-    this.setState({ isSubmitted: false });
     this.setState({ url: event.target.value });
   }
 
-  async handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
-    this.setState({ isSubmitted: true });
-    let raw = await fetch(this.state.url);
-    let jsonData = await raw.json();
-    console.log('raw.headers ----->', jsonData);
-    
-    // let data = {
-    //   count: jsonData.count,
-    //   results: jsonData.results.map((e) => {
-    //     return {name : e.name , url : e.url};
-    //   }),
-    // };
-    this.props.parentCallback(jsonData.count, jsonData.results, raw.headers);
+    this.props.parentCallback(this.state);
   }
 
   handleChangeMethod(event) {
-    this.setState({ isSubmitted: false });
     this.setState({ method: event.target.value });
   }
 
@@ -44,30 +34,18 @@ export default class Form extends React.Component {
             URL:
             <input
               type="text"
-              value={this.state.value}
+              value={this.state.url}
               onChange={this.handleChangeURL}
             />
           </label>
           <input type="submit" value="Go!" />
           <div onChange={this.handleChangeMethod}>
-            <input type="radio" value="Get" name="method" defaultChecked /> Get
-            <input type="radio" value="Post" name="method" /> Post
-            <input type="radio" value="Put" name="method" /> Put
-            <input type="radio" value="Delete" name="method" /> Delete
+            <input type="radio" value="Get" name="method" defaultChecked={this.props.method === 'Get'} /> Get
+            <input type="radio" value="Post" name="method" defaultChecked={this.props.method === 'Post'} /> Post
+            <input type="radio" value="Put" name="method" defaultChecked={this.props.method === 'Put'}/> Put
+            <input type="radio" value="Delete" name="method" defaultChecked={this.props.method === 'Delete'}/> Delete
           </div>
         </form>
-
-        {this.state.isSubmitted && (
-          <div id="user-choices">
-            <h3>User Choices</h3>
-            <p>
-              URL: <span>{this.state.url}</span>
-            </p>
-            <p>
-              METHOD: <span>{this.state.method}</span>
-            </p>
-          </div>
-        )}
       </>
     );
   }
