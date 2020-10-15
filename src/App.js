@@ -8,6 +8,8 @@ import Footer from "./components/footer/footer";
 import Form from "./components/form/Form";
 import Results from "./components/results/Results";
 import History from "./components/history/History";
+import { If, Then, Else } from "./components/if/if.js";
+
 
 class App extends React.Component {
   constructor() {
@@ -15,9 +17,10 @@ class App extends React.Component {
     this.state = {
       header: {},
       count: 0,
-      results: [],
+      results: null,
       method: "Get",
       url: "",
+      error: "",
     };
   }
 
@@ -35,16 +38,18 @@ class App extends React.Component {
         method: formData.method,
         results: data.body,
       });
+      this.setState({
+        count: data.body.count,
+        results: data.body.results ? data.body.results : data.body,
+        header: data.header,
+        method: formData.method,
+        url: formData.url,
+      });
     } catch (e) {
+      this.setState({error: `Error message: ${e.message}`})
       console.log(e);
     }
-    this.setState({
-      count: data.body.count,
-      results: data.body.results,
-      header: data.header,
-      method: formData.method,
-      url: formData.url,
-    });
+  
   };
 
   store(data) {
@@ -72,7 +77,17 @@ class App extends React.Component {
           url={this.state.url}
           method={this.state.method}
         />
+        <If condition={this.state.error}>
+        <Then>
+          <div id="error">
+            <p>{this.state.error}</p>
+          </div>
+        </Then>
+        <Else>
         <Results apiData={this.state} />
+        </Else>
+      </If>
+        
         <History parentCallback={this.handleChange} />
         <Footer />
       </>
