@@ -15,6 +15,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
+      loading: false,
       header: {},
       count: 0,
       results: null,
@@ -32,6 +33,7 @@ class App extends React.Component {
     // await this.setState({ method: formData.method, url: formData.url });
     let data;
     try {
+      this.toggleLoading();
       data = await superagent(formData.method, formData.url);
       this.store({
         url: formData.url,
@@ -45,6 +47,9 @@ class App extends React.Component {
         method: formData.method,
         url: formData.url,
       });
+
+      this.toggleLoading();
+
     } catch (e) {
       this.setState({error: `Error message: ${e.message}`})
       console.log(e);
@@ -68,6 +73,10 @@ class App extends React.Component {
     }
   }
 
+  toggleLoading = () => {
+    this.setState({ loading: !this.state.loading });
+  }
+
   render() {
     return (
       <>
@@ -84,7 +93,7 @@ class App extends React.Component {
           </div>
         </Then>
         <Else>
-        <Results apiData={this.state} />
+        <Results apiData={this.state} loading={this.state.loading}/>
         </Else>
       </If>
         
