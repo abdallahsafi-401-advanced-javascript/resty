@@ -9,7 +9,9 @@ import Form from "./components/form/Form";
 import Results from "./components/results/Results";
 import History from "./components/history/History";
 import { If, Then, Else } from "./components/if/if.js";
-
+import Help from "./components/help/help";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends React.Component {
   constructor() {
@@ -49,12 +51,10 @@ class App extends React.Component {
       });
 
       this.toggleLoading();
-
     } catch (e) {
-      this.setState({error: `Error message: ${e.message}`})
+      this.setState({ error: `Error message: ${e.message}` });
       console.log(e);
     }
-  
   };
 
   store(data) {
@@ -75,29 +75,68 @@ class App extends React.Component {
 
   toggleLoading = () => {
     this.setState({ loading: !this.state.loading });
-  }
+  };
 
   render() {
     return (
       <>
-        <Header />
-        <Form
-          parentCallback={this.handleRequest}
-          url={this.state.url}
-          method={this.state.method}
-        />
-        <If condition={this.state.error}>
-        <Then>
-          <div id="error">
-            <p>{this.state.error}</p>
-          </div>
-        </Then>
-        <Else>
-        <Results apiData={this.state} loading={this.state.loading}/>
-        </Else>
-      </If>
-        
-        <History parentCallback={this.handleChange} />
+        <Router>
+          <Header />
+          <Switch>
+            <Route
+              path="/"
+              exact
+              render={(props) => (
+                <>
+                  <Form
+                    parentCallback={this.handleRequest}
+                    url={this.state.url}
+                    method={this.state.method}
+                  />
+                  <If condition={this.state.error}>
+                    <Then>
+                      <div id="error">
+                        <p>{this.state.error}</p>
+                      </div>
+                    </Then>
+                    <Else>
+                      <Results
+                        apiData={this.state}
+                        loading={this.state.loading}
+                      />
+                    </Else>
+                  </If>
+
+                  <History parentCallback={this.handleChange} />
+                </>
+              )}
+            />
+            <Route path="/help" component={Help} />
+            <Route
+              path="/history"
+              render={(props) => (
+                <>
+                  <If condition={this.state.error}>
+                    <Then>
+                      <div id="error">
+                        <p>{this.state.error}</p>
+                      </div>
+                    </Then>
+                    <Else>
+                      <Results
+                        apiData={this.state}
+                        loading={this.state.loading}
+                      />
+                    </Else>
+                  </If>
+
+                  <History parentCallback={this.handleChange} />
+                </>
+              )}
+              parentCallback={this.handleChange}
+            />
+          </Switch>
+        </Router>
         <Footer />
       </>
     );
@@ -106,7 +145,4 @@ class App extends React.Component {
 
 export default App;
 
-
-
-
-  // "homepage": "http://AbdallahSafi.github.io/resty",
+// "homepage": "http://AbdallahSafi.github.io/resty",
